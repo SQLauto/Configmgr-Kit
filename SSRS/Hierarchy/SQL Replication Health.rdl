@@ -1,0 +1,743 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DB_With_CustomReplicationTable">
+      <DataSourceReference>ReplicationStatusHistoryDB</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>7b523aac-cd3d-411a-b72c-a26d75f015f0</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="SQLReplicationHealth">
+      <Query>
+        <DataSourceName>DB_With_CustomReplicationTable</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@NewStartDate">
+            <Value>=Parameters!NewStartDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@NewEndDate">
+            <Value>=Parameters!NewEndDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ServerRole">
+            <Value>=Parameters!ServerRole.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE  @ServerRole char(3) = 'Pri'
+--        ,@NewStartDate date = CONVERT(date,GETDATE()-1)
+--        ,@NewEndDate date = CONVERT(date,GETDATE());
+SELECT  rsh.ChildSiteCode
+       ,rsh.ServerRole
+       ,CASE WHEN ISNULL(SUM(1.0),0.0) &gt; 0 THEN CAST((ISNULL(SUM(CASE WHEN rsh.OverallLinkStatus IN (2,3) THEN 1.0 END),0.0)/SUM(1.0))*100 AS decimal(5,2))
+             ELSE 0.00
+        END AS [ActivePercentage]
+       ,CASE WHEN ISNULL(SUM(1.0),0.0) &gt; 0 THEN CAST((ISNULL(SUM(CASE WHEN rsh.OverallLinkStatus = 8 THEN 1.0 END),0.0)/SUM(1.0))*100 AS decimal(5,2))
+             ELSE 0.00
+        END AS [DegradedPercentage]
+       ,CASE WHEN ISNULL(SUM(1.0),0.0) &gt; 0 THEN CAST((ISNULL(SUM(CASE WHEN rsh.OverallLinkStatus = 9 THEN 1.0 END),0.0)/SUM(1.0))*100 AS decimal(5,2))
+             ELSE 0.00
+        END AS [FailedPercentage]
+  FROM dbo.ReplicationStatusHistory rsh
+       INNER JOIN dbo.ReplicationStatusCodes rsc
+          ON rsh.OverallLinkStatus = rsc.StatusID
+ WHERE rsh.CaptureDate BETWEEN @NewStartDate AND @NewEndDate
+   AND rsh.ServerRole IN (@ServerRole)
+ GROUP BY  rsh.ChildSiteCode
+          ,rsh.ServerRole;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ChildSiteCode">
+          <DataField>ChildSiteCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServerRole">
+          <DataField>ServerRole</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ActivePercentage">
+          <DataField>ActivePercentage</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="DegradedPercentage">
+          <DataField>DegradedPercentage</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="FailedPercentage">
+          <DataField>FailedPercentage</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Textbox Name="ExecutionTime">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Execution Time: </Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Globals!ExecutionTime</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>ExecutionTime</rd:DefaultName>
+            <Top>0.53139in</Top>
+            <Left>0.74667in</Left>
+            <Height>0.20834in</Height>
+            <Width>4.12288in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox27">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ConfigMgr 2012 SQL Replication Status Health</Value>
+                    <Style>
+                      <FontSize>18pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox27</rd:DefaultName>
+            <Top>0.18764in</Top>
+            <Left>0.16333in</Left>
+            <Height>0.30208in</Height>
+            <Width>5.66667in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Chart Name="SQLReplicationHealthChart">
+            <ChartCategoryHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="SiteCode_CategoryGroup">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!ChildSiteCode.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!ServerRole.Value</Value>
+                      <Direction>Descending</Direction>
+                    </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!ChildSiteCode.Value</Value>
+                      <Direction>Descending</Direction>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=Fields!ChildSiteCode.Value</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartCategoryHierarchy>
+            <ChartSeriesHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Label>Active Percentage</Label>
+                </ChartMember>
+                <ChartMember>
+                  <Label>Degraded Percentage</Label>
+                </ChartMember>
+                <ChartMember>
+                  <Label>Failed Percentage</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartSeriesHierarchy>
+            <ChartData>
+              <ChartSeriesCollection>
+                <ChartSeries Name="ActivePercentage">
+                  <ChartDataPoints>
+                    <ChartDataPoint>
+                      <ChartDataPointValues>
+                        <Y>=Sum(Fields!ActivePercentage.Value)</Y>
+                      </ChartDataPointValues>
+                      <ChartDataLabel>
+                        <Style>
+                          <FontSize>11pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                        <Label>=CStr(Fields!ActivePercentage.Value)&amp;"%"</Label>
+                        <Visible>true</Visible>
+                      </ChartDataLabel>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Drillthrough>
+                              <ReportName>SQL Replication Health by day</ReportName>
+                              <Parameters>
+                                <Parameter Name="StartDate">
+                                  <Value>=Parameters!NewStartDate.Value</Value>
+                                </Parameter>
+                                <Parameter Name="EndDate">
+                                  <Value>=Parameters!NewEndDate.Value</Value>
+                                </Parameter>
+                                <Parameter Name="SiteCode">
+                                  <Value>=Fields!ChildSiteCode.Value</Value>
+                                </Parameter>
+                                <Parameter Name="ShowLabels">
+                                  <Value>=IIf(DateDiff("d",Parameters!NewStartDate.Value,Parameters!NewEndDate.Value)&gt;=10,False,True)</Value>
+                                </Parameter>
+                                <Parameter Name="TargetLine">
+                                  <Value>=Parameters!TargetLine.Value</Value>
+                                </Parameter>
+                              </Parameters>
+                            </Drillthrough>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Color>Green</Color>
+                      </Style>
+                      <ChartMarker>
+                        <Style />
+                      </ChartMarker>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </ChartDataPoint>
+                  </ChartDataPoints>
+                  <Type>Bar</Type>
+                  <Subtype>PercentStacked</Subtype>
+                  <Style />
+                  <ChartEmptyPoints>
+                    <Style />
+                    <ChartMarker>
+                      <Style />
+                    </ChartMarker>
+                    <ChartDataLabel>
+                      <Style />
+                    </ChartDataLabel>
+                  </ChartEmptyPoints>
+                  <ValueAxisName>Primary</ValueAxisName>
+                  <CategoryAxisName>Primary</CategoryAxisName>
+                  <ChartSmartLabel>
+                    <CalloutLineColor>Black</CalloutLineColor>
+                    <MinMovingDistance>0pt</MinMovingDistance>
+                  </ChartSmartLabel>
+                </ChartSeries>
+                <ChartSeries Name="DegradedPercentage">
+                  <ChartDataPoints>
+                    <ChartDataPoint>
+                      <ChartDataPointValues>
+                        <Y>=Sum(Fields!DegradedPercentage.Value)</Y>
+                      </ChartDataPointValues>
+                      <ChartDataLabel>
+                        <Style />
+                      </ChartDataLabel>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Drillthrough>
+                              <ReportName>SQL Replication Health by day</ReportName>
+                              <Parameters>
+                                <Parameter Name="StartDate">
+                                  <Value>=Parameters!NewStartDate.Value</Value>
+                                </Parameter>
+                                <Parameter Name="EndDate">
+                                  <Value>=Parameters!NewEndDate.Value</Value>
+                                </Parameter>
+                                <Parameter Name="SiteCode">
+                                  <Value>=Fields!ChildSiteCode.Value</Value>
+                                </Parameter>
+                                <Parameter Name="ShowLabels">
+                                  <Value>=IIf(DateDiff("d",Parameters!NewStartDate.Value,Parameters!NewEndDate.Value)&gt;=10,False,True)</Value>
+                                </Parameter>
+                                <Parameter Name="TargetLine">
+                                  <Value>=Parameters!TargetLine.Value</Value>
+                                </Parameter>
+                              </Parameters>
+                            </Drillthrough>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Color>Yellow</Color>
+                      </Style>
+                      <ChartMarker>
+                        <Style />
+                      </ChartMarker>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </ChartDataPoint>
+                  </ChartDataPoints>
+                  <Type>Bar</Type>
+                  <Subtype>PercentStacked</Subtype>
+                  <Style />
+                  <ChartEmptyPoints>
+                    <Style />
+                    <ChartMarker>
+                      <Style />
+                    </ChartMarker>
+                    <ChartDataLabel>
+                      <Style />
+                    </ChartDataLabel>
+                  </ChartEmptyPoints>
+                  <ValueAxisName>Primary</ValueAxisName>
+                  <CategoryAxisName>Primary</CategoryAxisName>
+                  <ChartSmartLabel>
+                    <CalloutLineColor>Black</CalloutLineColor>
+                    <MinMovingDistance>0pt</MinMovingDistance>
+                  </ChartSmartLabel>
+                </ChartSeries>
+                <ChartSeries Name="FailedPercentage">
+                  <ChartDataPoints>
+                    <ChartDataPoint>
+                      <ChartDataPointValues>
+                        <Y>=Sum(Fields!FailedPercentage.Value)</Y>
+                      </ChartDataPointValues>
+                      <ChartDataLabel>
+                        <Style />
+                      </ChartDataLabel>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Drillthrough>
+                              <ReportName>SQL Replication Health by day</ReportName>
+                              <Parameters>
+                                <Parameter Name="StartDate">
+                                  <Value>=Parameters!NewStartDate.Value</Value>
+                                </Parameter>
+                                <Parameter Name="EndDate">
+                                  <Value>=Parameters!NewEndDate.Value</Value>
+                                </Parameter>
+                                <Parameter Name="SiteCode">
+                                  <Value>=Fields!ChildSiteCode.Value</Value>
+                                </Parameter>
+                                <Parameter Name="ShowLabels">
+                                  <Value>=IIf(DateDiff("d",Parameters!NewStartDate.Value,Parameters!NewEndDate.Value)&gt;=10,False,True)</Value>
+                                </Parameter>
+                                <Parameter Name="TargetLine">
+                                  <Value>=Parameters!TargetLine.Value</Value>
+                                </Parameter>
+                              </Parameters>
+                            </Drillthrough>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Color>Red</Color>
+                      </Style>
+                      <ChartMarker>
+                        <Style />
+                      </ChartMarker>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </ChartDataPoint>
+                  </ChartDataPoints>
+                  <Type>Bar</Type>
+                  <Subtype>PercentStacked</Subtype>
+                  <Style />
+                  <ChartEmptyPoints>
+                    <Style />
+                    <ChartMarker>
+                      <Style />
+                    </ChartMarker>
+                    <ChartDataLabel>
+                      <Style />
+                    </ChartDataLabel>
+                  </ChartEmptyPoints>
+                  <ValueAxisName>Primary</ValueAxisName>
+                  <CategoryAxisName>Primary</CategoryAxisName>
+                  <ChartSmartLabel>
+                    <CalloutLineColor>Black</CalloutLineColor>
+                    <MinMovingDistance>0pt</MinMovingDistance>
+                  </ChartSmartLabel>
+                </ChartSeries>
+              </ChartSeriesCollection>
+            </ChartData>
+            <ChartAreas>
+              <ChartArea Name="Default">
+                <ChartCategoryAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <Interval>1</Interval>
+                    <IntervalOffset>1</IntervalOffset>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartCategoryAxes>
+                <ChartValueAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <ChartStripLines>
+                      <ChartStripLine>
+                        <Style>
+                          <Border>
+                            <Color>Blue</Color>
+                            <Style>Solid</Style>
+                            <Width>1.5pt</Width>
+                          </Border>
+                          <BackgroundGradientType>None</BackgroundGradientType>
+                          <FontSize>8pt</FontSize>
+                          <TextAlign>Right</TextAlign>
+                          <VerticalAlign>Top</VerticalAlign>
+                        </Style>
+                        <Title>="Active Target: " &amp; CStr(Parameters!TargetLine.Value) &amp; "% "</Title>
+                        <TextOrientation>Horizontal</TextOrientation>
+                        <IntervalOffset>=Parameters!TargetLine.Value</IntervalOffset>
+                        <IntervalOffsetType>Number</IntervalOffsetType>
+                      </ChartStripLine>
+                    </ChartStripLines>
+                    <Minimum>=Min(Fields!ActivePercentage.Value)-2</Minimum>
+                    <Maximum>100</Maximum>
+                    <IncludeZero>false</IncludeZero>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartValueAxes>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </ChartArea>
+            </ChartAreas>
+            <ChartLegends>
+              <ChartLegend Name="Default">
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontSize>8pt</FontSize>
+                </Style>
+                <Position>TopCenter</Position>
+                <ChartLegendTitle>
+                  <Caption />
+                  <Style>
+                    <FontSize>8pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </ChartLegendTitle>
+                <HeaderSeparatorColor>Black</HeaderSeparatorColor>
+                <ColumnSeparatorColor>Black</ColumnSeparatorColor>
+              </ChartLegend>
+            </ChartLegends>
+            <ChartTitles>
+              <ChartTitle Name="Default">
+                <Caption>="SQL Replication Status " &amp; CStr(Parameters!DateRangeReportHeader.Value)</Caption>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontSize>11pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextAlign>General</TextAlign>
+                  <VerticalAlign>Top</VerticalAlign>
+                </Style>
+              </ChartTitle>
+            </ChartTitles>
+            <Palette>BrightPastel</Palette>
+            <ChartBorderSkin>
+              <Style>
+                <BackgroundColor>Gray</BackgroundColor>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <Color>White</Color>
+              </Style>
+            </ChartBorderSkin>
+            <ChartNoDataMessage Name="NoDataMessage">
+              <Caption>No Data Available</Caption>
+              <Style>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <TextAlign>General</TextAlign>
+                <VerticalAlign>Top</VerticalAlign>
+              </Style>
+            </ChartNoDataMessage>
+            <DataSetName>SQLReplicationHealth</DataSetName>
+            <Top>1.07306in</Top>
+            <Left>0.74667in</Left>
+            <Height>5.54653in</Height>
+            <Width>8.77913in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Color>LightGrey</Color>
+                <Style>Solid</Style>
+              </Border>
+              <BackgroundColor>White</BackgroundColor>
+              <BackgroundGradientType>None</BackgroundGradientType>
+            </Style>
+          </Chart>
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Note: Any date chosen greater than yesterday is updated to yesterdays date.</Value>
+                    <Style>
+                      <FontStyle>Italic</FontStyle>
+                      <FontSize>9pt</FontSize>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.75362in</Top>
+            <Left>0.49667in</Left>
+            <Height>0.25in</Height>
+            <Width>4.37288in</Width>
+            <ZIndex>3</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(Parameters!StartDate.Value &gt;= Today() Or Parameters!EndDate.Value &gt;= Today(),False,True)</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <Height>7.01958in</Height>
+        <Style />
+      </Body>
+      <Width>10.24665in</Width>
+      <Page>
+        <LeftMargin>1in</LeftMargin>
+        <RightMargin>1in</RightMargin>
+        <TopMargin>1in</TopMargin>
+        <BottomMargin>1in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="StartDate">
+      <DataType>DateTime</DataType>
+      <Prompt>Start Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="EndDate">
+      <DataType>DateTime</DataType>
+      <Prompt>End Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ServerRole">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Pri</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Server Role</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Pri</Value>
+            <Label>Primary Sites</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Sec</Value>
+            <Label>Secondary Sites</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="NewStartDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=IIf(Parameters!StartDate.Value&gt;DateAdd("d",-1,Today()),DateAdd("d",-1,Today()),Parameters!StartDate.Value)</Value>
+        </Values>
+      </DefaultValue>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="NewEndDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=IIf(Parameters!NewStartDate.Value&gt;Parameters!EndDate.Value,Parameters!NewStartDate.Value,(IIf(Parameters!EndDate.Value&gt;DateAdd("d",-1,Today()),DateAdd("d",-1,Today()),Parameters!EndDate.Value)))</Value>
+        </Values>
+      </DefaultValue>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="DateRangeReportHeader">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=IIf(Parameters!NewStartDate.Value = Parameters!NewEndDate.Value, ("for "&amp;FormatDateTime(Parameters!NewStartDate.Value,DateFormat.ShortDate)), ("from "&amp;FormatDateTime(Parameters!NewStartDate.Value,DateFormat.ShortDate)&amp;" to "&amp;FormatDateTime(Parameters!NewEndDate.Value,DateFormat.ShortDate)))</Value>
+        </Values>
+      </DefaultValue>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="TargetLine">
+      <DataType>Float</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>99.9</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>This is the active health target - to be displayed on the chart</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>e0a9a7a4-6811-46a0-9c7d-13c440e7fcb2</rd:ReportID>
+</Report>
