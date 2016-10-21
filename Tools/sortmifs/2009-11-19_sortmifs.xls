@@ -1,0 +1,33 @@
+
+<HTML xmlns:x="urn:schemas-microsoft-com:office:excel">
+<HEAD>
+<style>
+</style>
+<!--[if gte mso 9]><xml>
+    <x:ExcelWorkbook>
+      <x:ExcelWorksheets>
+       <x:ExcelWorksheet>
+        <x:Name>SortMifs 2009-11-19 Results</x:Name>
+        <x:WorksheetOptions>
+         <x:Print>
+          <x:ValidPrinterInfo/>
+         </x:Print>
+        <x:FilterOn/>
+        </x:WorksheetOptions>
+       </x:ExcelWorksheet>
+      </x:ExcelWorksheets>
+     </x:ExcelWorkbook>
+    </xml><![endif]-->
+    </HEAD>
+    <TABLE>
+      <tr>
+        <td x:AUTOFILTER="all"><b>Client Name</td /x:AUTOFILTER="all">
+        <td x:AUTOFILTER="all"><b>GUID</td>
+        <td x:AUTOFILTER="all"><b>IP Address</td>
+        <td x:AUTOFILTER="all"><b>Domain</td /x:AUTOFILTER="all">
+        <td x:AUTOFILTER="all"><b>MIF Files</td>
+        <td x:AUTOFILTER="all"><b>Count of MIFs</td>
+        <td x:AUTOFILTER="all"><b>Newest Mif file date</td>
+        <td x:AUTOFILTER="all"><b>SMS Last Inventory Date</td>
+        <td x:AUTOFILTER="all"><b>Status</td>
+      </tr>
