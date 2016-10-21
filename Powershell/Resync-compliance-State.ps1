@@ -1,0 +1,7 @@
+﻿##### Name: Resync the compliance state
+##### Ref Article:http://blogs.technet.com/b/scotts-it-blog/archive/2015/02/23/refreshing-state-messages-in-system-center-configuration-manager-2012.aspx
+
+$SCCMUpdatesStore = New-Object -ComObject Microsoft.CCM.UpdatesStore
+$SCCMUpdatesStore.RefreshServerComplianceState()
+New-EventLog -LogName Application -Source SyncStateScript -ErrorAction SilentlyContinue
+Write-EventLog -LogName Application -Source SyncStateScript -EventId 555 -EntryType Information -Message "Sync State ran successfully"

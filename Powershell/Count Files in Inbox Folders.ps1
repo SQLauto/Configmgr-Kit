@@ -1,0 +1,1 @@
+Get-ChildItem \\MYSERVER\SMS_C01\inboxes -Recurse | Group-Object Directory | Where { $_.Count -gt 1 }  | Sort-Object Count -Descending | Format-Table Count, Name -AutoSize
