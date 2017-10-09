@@ -1,0 +1,69 @@
+//=================================DOTNetFrameworks
+//Based on the following
+//For V1-4: http://social.technet.microsoft.com/wiki/contents/articles/15601.how-to-determine-the-net-framework-installed-versions.aspx
+//For v4-4.61: https://msdn.microsoft.com/en-us/library/hh925568(v=vs.110).aspx
+
+#pragma namespace("\\\\.\\root\\cimv2")
+#pragma deleteclass("DotNETFrameworks",NOFAIL)
+[DYNPROPS]
+class DotNETFrameworks
+
+{ [key] string Version="";
+boolean Installed;
+string ServicePack;
+string BuildNumber;
+uint32 Release;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="1.0";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Active Setup\\Installed Components\\{78705f0d-e8db-4b2d-8193-982bdda15ecd}|Version"),Dynamic,Provider("RegPropProv")] BuildNumber;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="1.0 MCE";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Active Setup\\Installed Components\\{FDC11A6F-17D1-48f9-9EA3-9051954BAA24}|Version"),Dynamic,Provider("RegPropProv")] BuildNumber;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="1.1";
+BuildNumber="1.1.4322";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v1.1.4322|Install"),Dynamic,Provider("RegPropProv")] Installed;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v1.1.4322|SP"),Dynamic,Provider("RegPropProv")] ServicePack;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="2.0";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727|Install"),Dynamic,Provider("RegPropProv")] Installed;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727|SP"),Dynamic,Provider("RegPropProv")] ServicePack;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v2.0.50727|Version"),Dynamic,Provider("RegPropProv")] BuildNumber;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="3.0";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.0|Install"),Dynamic,Provider("RegPropProv")] Installed;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.0|SP"),Dynamic,Provider("RegPropProv")] ServicePack;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.0|Version"),Dynamic,Provider("RegPropProv")] BuildNumber;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="3.5";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.5|Install"),Dynamic,Provider("RegPropProv")] Installed;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.5|SP"),Dynamic,Provider("RegPropProv")] ServicePack;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v3.5|Version"),Dynamic,Provider("RegPropProv")] BuildNumber;
+};
+
+[DYNPROPS]
+instance of DotNETFrameworks
+{ Version="4.0";
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client|Install"),Dynamic,Provider("RegPropProv")] Installed;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client|SP"),Dynamic,Provider("RegPropProv")] ServicePack;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client|Version"),Dynamic,Provider("RegPropProv")] BuildNumber;
+[PropertyContext("local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Client|Release"),Dynamic,Provider("RegPropProv")] Release;
+};

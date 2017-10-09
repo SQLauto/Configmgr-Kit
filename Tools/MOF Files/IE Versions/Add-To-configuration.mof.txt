@@ -1,0 +1,29 @@
+// RegKeyToMOF by Mark Cochrane (thanks to Skissinger, Steverac, Jonas Hettich & Kent Agerlund)
+// this section tells the inventory agent what to collect
+// Place at the bottom of your configuration.mof file in installedlocation/inboxes/clifiles.src/hinv
+
+#pragma namespace ("\\\\.\\root\\cimv2")
+#pragma deleteclass("IExplorerVer", NOFAIL)
+[DYNPROPS]
+Class IExplorerVer
+{
+[key] string KeyName;
+String Version;
+String svcVersion;
+String svcKBNumber;
+};
+
+ 
+
+[DYNPROPS]
+Instance of IExplorerVer
+{
+KeyName="RegKeyToMOF";
+[PropertyContext("Local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer|Version"),Dynamic,Provider ("RegPropProv")] Version;
+[PropertyContext("Local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer|svcVersion"),Dynamic,Provider ("RegPropProv")] svcVersion;
+[PropertyContext("Local|HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Internet Explorer|svcKBNumber"),Dynamic,Provider ("RegPropProv")] svcKBNumber;
+};
+
+ 
+
+//=============================

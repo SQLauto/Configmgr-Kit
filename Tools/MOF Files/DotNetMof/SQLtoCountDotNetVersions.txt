@@ -1,0 +1,49 @@
+
+--SQLtoCountDotNetVersions 
+--###############################################
+--Cleanup any accidentally left behind Temp Tables
+--###############################################
+
+If(OBJECT_ID('tempdb..#TempDotNet') Is Not Null)
+Begin
+ Drop Table #TempDotNet
+End
+
+create table #TempDotNet(
+	ResourceID int,
+	BuildNumber nvarchar (32),
+	DotNet4Simplev2 nvarchar(256)
+)
+
+INSERT INTO #TempDotNet (ResourceID, BuildNumber, DotNet4Simplev2)
+select resourceid, 
+dn.BuildNumber0
+,MAX(CASE dn.version0 when '4.0' THEN
+  case 
+when dn.BuildNumber0 = '4.0.30319' then '4.0'
+when dn.BuildNumber0 = '4.5.50709' then '4.5' 
+when dn.BuildNumber0 Between '4.5.50937' and '4.5.51208' then '4.5.1'
+when dn.BuildNumber0 Between '4.5.51208' and '4.5.99999' then '4.5.2'
+when dn.BuildNumber0 like '4.6.00%' then '4.6'
+when dn.BuildNumber0 like '4.6.01%' then '4.6.1'
+else 'BuildNumber is ' + convert(nvarchar,dn.BuildNumber0) + ', currently not defined in this report--research and report modification needed'
+  end
+END) as [DotNet4Simplev2]
+from v_GS_DotNETFrameworks0 dn
+where dn.version0='4.0' and dn.installed0=1
+group by dn.resourceid, dn.buildnumber0
+
+SELECT dn.DotNet4Simplev2 as [.Net 4 Version]
+,count(distinct dn.resourceid) as [Count]
+FROM
+#TempDotNet dn
+Group By dn.DotNet4Simplev2
+order by dn.DotNet4Simplev2 desc
+
+--###############################################
+--Cleanup Temp Table
+--###############################################
+If(OBJECT_ID('tempdb..#TempDotNet') Is Not Null)
+Begin
+ Drop Table #TempDotNet
+End

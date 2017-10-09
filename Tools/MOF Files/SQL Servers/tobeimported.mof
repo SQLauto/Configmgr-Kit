@@ -1,0 +1,70 @@
+[ dynamic, provider("MS_VIEW_INSTANCE_PROVIDER"),
+  SMS_Report (TRUE),
+  SMS_Group_Name ("SQL14 Property"),
+  SMS_Class_ID ("CUSTOM|SQL14_Property|1.0")]
+class cm_sql14 : SMS_Class_Template
+{
+    [ SMS_Report (TRUE) ]       Boolean    IsReadOnly;
+    [ SMS_Report (TRUE), key ]    UInt32     PropertyIndex;
+    [ SMS_Report (TRUE), key ]    String     PropertyName;
+    [ SMS_Report (TRUE) ]       UInt32     PropertyNumValue;
+    [ SMS_Report (TRUE) ]       String     PropertyStrValue;
+    [ SMS_Report (TRUE) ]       UInt32     PropertyValueType;
+    [ SMS_Report (TRUE), key ]    String     ServiceName;
+    [ SMS_Report (TRUE), key ]    UInt32     SqlServiceType;
+};
+
+//=================SQL 2012 Information
+
+[dynamic, provider("MS_VIEW_INSTANCE_PROVIDER"),
+SMS_Report(TRUE), 
+SMS_Group_Name("SQL12 Property"), 
+SMS_Class_ID("CUSTOM|SQL12_Property|1.0")]
+class cm_sql12 : SMS_Class_Template
+
+{      [SMS_Report(TRUE)    ]  boolean IsReadOnly;
+      [SMS_Report(TRUE),key]  uint32 PropertyIndex;
+      [SMS_Report(TRUE),key]  string PropertyName;
+    [SMS_Report(TRUE)    ]  uint32 PropertyNumValue;
+    [SMS_Report(TRUE)    ]  string PropertyStrValue;
+    [SMS_Report(TRUE)    ]  uint32 PropertyValueType;
+    [SMS_Report(TRUE),key]  string ServiceName;
+    [SMS_Report(TRUE),key]  uint32 SqlServiceType;
+};
+
+//=================SQL 2008 Information
+
+[dynamic, provider("MS_VIEW_INSTANCE_PROVIDER"), 
+SMS_Report(TRUE),
+SMS_Group_Name("SQL Property"),
+SMS_Class_ID("CUSTOM|SQL_Property|2.0")]
+class cm_sql08 : SMS_Class_Template
+
+{      [SMS_Report(TRUE)    ]  boolean IsReadOnly;
+      [SMS_Report(TRUE),key]  uint32 PropertyIndex;
+      [SMS_Report(TRUE),key]  string PropertyName;
+    [SMS_Report(TRUE)    ]  uint32 PropertyNumValue;
+    [SMS_Report(TRUE)    ]  string PropertyStrValue;
+    [SMS_Report(TRUE)    ]  uint32 PropertyValueType;
+    [SMS_Report(TRUE),key]  string ServiceName;
+    [SMS_Report(TRUE),key]  uint32 SqlServiceType;
+};
+
+//==================SQL Information 2000 and 2005
+
+[dynamic, provider("MS_VIEW_INSTANCE_PROVIDER"),
+SMS_Report(TRUE),
+SMS_Group_Name("SQL Property Legacy"),
+SMS_Class_ID("SQL_Property_Legacy|2.0")]
+
+class cm_sql2kand05 : SMS_Class_Template
+
+{      [SMS_Report(TRUE)    ]  boolean IsReadOnly;
+      [SMS_Report(TRUE),key]  uint32 PropertyIndex;
+      [SMS_Report(TRUE),key]  string PropertyName;
+    [SMS_Report(TRUE)    ]  uint32 PropertyNumValue;
+    [SMS_Report(TRUE)    ]  string PropertyStrValue;
+    [SMS_Report(TRUE)    ]  uint32 PropertyValueType;
+    [SMS_Report(TRUE),key]  string ServiceName;
+    [SMS_Report(TRUE),key]  uint32 SqlServiceType;
+};

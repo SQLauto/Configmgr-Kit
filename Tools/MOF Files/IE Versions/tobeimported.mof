@@ -1,0 +1,17 @@
+// RegKeyToMOF by Mark Cochrane (thanks to Skissinger, Steverac, Jonas Hettich & Kent Agerlund)
+// this section tells the inventory agent what to report to the server
+// Save this snippet as 'tobeimported.mof', and in CM2012, import it into your Default Client Agent
+// Settings, Hardware Inventory, Classes, Import
+
+ 
+
+#pragma namespace ("\\\\.\\root\\cimv2\\SMS")
+#pragma deleteclass("IExplorerVer", NOFAIL)
+[SMS_Report(TRUE),SMS_Group_Name("IExplorerVer"),SMS_Class_ID("IExplorerVer")]
+Class IExplorerVer: SMS_Class_Template
+{
+[SMS_Report(TRUE),key] string KeyName;
+[SMS_Report(TRUE)] String Version;
+[SMS_Report(TRUE)] String svcVersion;
+[SMS_Report(TRUE)] String svcKBNumber;
+};

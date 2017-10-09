@@ -1,0 +1,44 @@
+select sys1.Netbios_name0, 
+max(Case sql4.PropertyName0 when ‘SKUName’ then
+   sql4.PropertySTRValue0 end) as [SQL14 Type] ,
+max(Case sql4.PropertyName0 when ‘SPLEVEL’ then
+   sql4.PropertyNUMValue0 end) as [SQL14 Service Pack]   ,
+max(Case sql4.PropertyName0 when ‘VERSION’ then
+   sql4.PropertySTRValue0 end) as [SQL14 Version] ,
+max(Case sql4.PropertyName0 when ‘FILEVERSION’ then
+   sql4.PropertySTRValue0 end) as [SQL14 CU Version],
+max(Case sql3.PropertyName0 when ‘SKUName’ then
+   sql3.PropertySTRValue0 end) as [SQL12 Type],
+max(Case sql3.PropertyName0 when ‘SPLEVEL’ then
+   sql3.PropertyNUMValue0 end) as [SQL12 Service Pack]   ,
+max(Case sql3.PropertyName0 when ‘VERSION’ then
+   sql3.PropertySTRValue0 end) as [SQL12 Version] ,
+max(Case sql3.PropertyName0 when ‘FILEVERSION’ then
+   sql3.PropertySTRValue0 end) as [SQL12 CU Version] ,
+max(Case sql.PropertyName0 when ‘SKUName’ then 
+   sql.PropertySTRValue0 end) as [SQL08 Type] ,
+max(Case sql.PropertyName0 when ‘SPLEVEL’ then
+   sql.PropertyNUMValue0 end) as [SQL08 Service Pack]   ,
+max(Case sql.PropertyName0 when ‘VERSION’ then
+   sql.PropertySTRValue0 end) as [SQL08 Version] ,
+max(Case sql.PropertyName0 when ‘FILEVERSION’ then
+   sql.PropertySTRValue0 end) as [SQL08 CU Version] ,
+max(Case sql2.PropertyName0 when ‘SKUName’ then
+   sql2.PropertySTRValue0 end) as [SQL05 Type] ,
+max(Case sql2.PropertyName0 when ‘SPLEVEL’ then
+   sql2.PropertyNUMValue0 end) as [SQL05 Service Pack] ,
+max(Case sql2.PropertyName0 when ‘VERSION’ then
+   sql2.PropertySTRValue0 end) as [SQL05 Version] ,
+max(Case sql2.PropertyName0 when ‘FILEVERSION’ then
+   sql2.PropertySTRValue0 end) as [SQL05 CU Version] 
+from v_r_system sys1 
+left join v_gs_sql_property0 sql on sys1.resourceid=sql.ResourceID 
+left join v_gs_sql_property_legacy0 sql2 on sys1.ResourceID=sql2.ResourceID 
+left join v_GS_SQL12_Property0 sql3 on sys1.ResourceID=sql3.ResourceID 
+left join v_gs_SQL14_Property0 sql4 on sys1.ResourceID=sql4.ResourceID 
+where 
+sql.PropertyName0 in (‘SKUNAME’,'SPLevel’,'version’,'fileversion’)
+or sql2.PropertyName0 in (‘SKUNAME’,'SPLevel’,'version’,'fileversion’)
+or sql3.PropertyName0 in (‘SKUNAME’,'SPLevel’,'version’,'fileversion’)
+or sql4.PropertyName0 in (‘SKUNAME’,'SPLevel’,'version’,'fileversion’)
+group by sys1.Netbios_name0

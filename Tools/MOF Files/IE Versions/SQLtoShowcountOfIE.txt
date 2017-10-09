@@ -1,0 +1,41 @@
+//========Count Internet Explorer====================
+Select
+ie.svcKBNumber0 [Latest Hotfix applied, (available in version 9 and higher)],
+--Use this next for linking in an SRS report, but you don't need to have a column for it in the report display
+RIGHT(ie.svcKBNumber0,LEN(ie.svckbnumber0)-2) as 'UseforLinking',
+case when ie.svcversion0 is null then ie.version0
+ else ie.svcversion0 end as 'Internet Explorer Version',
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,4) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,4) AS BIGINT) end as 'MajorVersion',
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,3) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,3) AS BIGINT) end as 'MinorVersion',
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,2) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,2) AS BIGINT) end as 'RevisionNumber',
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,1) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,1) AS BIGINT) end as 'BuildNumber',
+count(*) as 'Count'
+from v_GS_IExplorerVer0 ie
+group by
+ ie.svckbnumber0,
+ RIGHT(ie.svcKBNumber0,LEN(ie.svckbnumber0)-2),
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,4) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,4) AS BIGINT) end,
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,3) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,3) AS BIGINT) end,
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,2) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,2) AS BIGINT) end,
+case when ie.svcversion0 is null then
+ cast(ParseName(ie.version0,1) AS BIGINT)
+ else cast(ParseName(ie.svcversion0,1) AS BIGINT) end,
+case when ie.svcversion0 is null then ie.version0
+ else ie.svcversion0 end
+order by 'MajorVersion','MinorVersion','RevisionNumber','BuildNumber'
+
+//===========================

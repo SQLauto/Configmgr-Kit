@@ -1,0 +1,16 @@
+// Save the below as DotNet.mof, and import into Default Client Settings, Hardware Inventory
+
+[ SMS_Report (TRUE),
+SMS_Group_Name ("DotNetFrameworks"),
+SMS_Class_ID ("DotNETFrameworks"),
+Namespace ("\\\\\\\\.\\\\root\\\\cimv2") ]
+class DotNETFrameworks : SMS_Class_Template
+{
+[ SMS_Report (TRUE), key ] String Version;
+[ SMS_Report (TRUE) ] String BuildNumber;
+[ SMS_Report (TRUE) ] String Installed;
+[ SMS_Report (TRUE) ] Uint32 Release;
+[ SMS_Report (TRUE) ] String ServicePack;
+
+};
+// ========End of To-be-Imported.mof

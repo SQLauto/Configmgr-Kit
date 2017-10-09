@@ -1,0 +1,67 @@
+//--------------------------------------------- // SQL 2014 Properties //---------------------------------------------
+
+[Union, ViewSources{"select IsReadOnly,PropertyIndex,PropertyName,PropertyNumValue,PropertyStrValue,PropertyValueType,ServiceName,SqlServiceType from sqlServiceAdvancedProperty"},ViewSpaces{"\\\\.\\root\\microsoft\\sqlserver\\computermanagement12"}, dynamic,Provider("MS_VIEW_INSTANCE_PROVIDER")]
+
+class cm_sql14
+
+{
+    [PropertySources{"IsReadOnly"}        ] boolean IsReadOnly;
+    [PropertySources{"PropertyIndex"},key ] uint32 PropertyIndex;
+    [PropertySources{"PropertyName"},key  ] string PropertyName;
+    [PropertySources{"PropertyNumValue"}  ] uint32 PropertyNumValue;
+    [PropertySources{"PropertyStrValue"}  ] string PropertyStrValue;
+    [PropertySources{"PropertyValueType"} ] uint32 PropertyValueType;
+    [PropertySources{"ServiceName"},key   ] string ServiceName;
+    [PropertySources{"SqlServiceType"},key] uint32 SqlServiceType;
+};
+
+//——————————————— // SQL 2012 Properties //———————————————
+
+[Union, ViewSources{"select IsReadOnly,PropertyIndex,PropertyName,PropertyNumValue,PropertyStrValue,PropertyValueType,ServiceName,SqlServiceType from sqlServiceAdvancedProperty"},ViewSpaces{"\\\\.\\root\\microsoft\\sqlserver\\computermanagement11"}, dynamic,Provider("MS_VIEW_INSTANCE_PROVIDER")]
+
+class cm_sql12
+
+{
+    [PropertySources{"IsReadOnly"}        ] boolean IsReadOnly;
+    [PropertySources{"PropertyIndex"},key ] uint32 PropertyIndex;
+    [PropertySources{"PropertyName"},key  ] string PropertyName;
+    [PropertySources{"PropertyNumValue"}  ] uint32 PropertyNumValue;
+    [PropertySources{"PropertyStrValue"}  ] string PropertyStrValue;
+    [PropertySources{"PropertyValueType"} ] uint32 PropertyValueType;
+    [PropertySources{"ServiceName"},key   ] string ServiceName;
+    [PropertySources{"SqlServiceType"},key] uint32 SqlServiceType;
+};
+
+//——————————————— // SQL 2008 Properties //———————————————
+
+[Union, ViewSources{"select IsReadOnly,PropertyIndex,PropertyName,PropertyNumValue,PropertyStrValue,PropertyValueType,ServiceName,SqlServiceType from sqlServiceAdvancedProperty"},ViewSpaces{"\\\\.\\root\\microsoft\\sqlserver\\computermanagement10"}, dynamic,Provider("MS_VIEW_INSTANCE_PROVIDER")]
+
+class cm_sql08
+
+{
+      [PropertySources{"IsReadOnly"}        ] boolean IsReadOnly;
+    [PropertySources{"PropertyIndex"},key ] uint32 PropertyIndex;
+    [PropertySources{"PropertyName"},key  ] string PropertyName;
+    [PropertySources{"PropertyNumValue"}  ] uint32 PropertyNumValue;
+    [PropertySources{"PropertyStrValue"}  ] string PropertyStrValue;
+    [PropertySources{"PropertyValueType"} ] uint32 PropertyValueType;
+    [PropertySources{"ServiceName"},key   ] string ServiceName;
+    [PropertySources{"SqlServiceType"},key] uint32 SqlServiceType;
+};
+
+//——————————————— // SQL 2000/2005 Properties //———————————————
+
+[Union, ViewSources{"select IsReadOnly,PropertyIndex,PropertyName,PropertyNumValue,PropertyStrValue,PropertyValueType,ServiceName,SqlServiceType from sqlServiceAdvancedProperty"},ViewSpaces{"\\\\.\\root\\microsoft\\sqlserver\\computermanagement"}, dynamic,Provider("MS_VIEW_INSTANCE_PROVIDER")]
+
+class cm_sql2kand05
+
+{
+     [PropertySources{"IsReadOnly"}        ] boolean IsReadOnly;
+   [PropertySources{"PropertyIndex"},key ] uint32 PropertyIndex;
+   [PropertySources{"PropertyName"},key  ] string PropertyName;
+   [PropertySources{"PropertyNumValue"}  ] uint32 PropertyNumValue;
+   [PropertySources{"PropertyStrValue"}  ] string PropertyStrValue;
+   [PropertySources{"PropertyValueType"} ] uint32 PropertyValueType;
+   [PropertySources{"ServiceName"},key   ] string ServiceName;
+   [PropertySources{"SqlServiceType"},key] uint32 SqlServiceType;
+};
